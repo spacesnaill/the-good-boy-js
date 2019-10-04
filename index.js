@@ -4,14 +4,27 @@ require("dotenv").config();
 const Discord = require("discord.js");
 const fetch = require("node-fetch");
 
+const commandCharacter = "?";
+const commands = [
+  { usage: `\`${commandCharacter}ping\``, description: "responds with pong" },
+  {
+    usage: `\`${commandCharacter}avatar @user\``,
+    description:
+      "return the image link of the specified user's avatar. Leave blank for your own avatar"
+  },
+  {
+    usage: `\`${commandCharacter}whereiss\``,
+    description:
+      "returns a link to the International Space Station's location via google maps and its longitude and latitude"
+  }
+];
+
 const botToken = process.env.BOT_TOKEN_DEV;
 const client = new Discord.Client();
 
 client.on("ready", () => {
   console.log("Woof!");
 });
-
-const commandCharacter = "!";
 
 client.on("message", message => {
   const messageString = message.toString();
@@ -34,6 +47,12 @@ client.on("message", message => {
       case "whereiss":
         getISSlocation(message);
         break;
+      case "help":
+        commands.forEach(command => {
+          message.channel.send(`
+          **Command:** ${command.usage}\n**Description:** ${command.description}\n---
+          `);
+        });
     }
   }
 });
