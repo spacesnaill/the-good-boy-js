@@ -21,6 +21,18 @@ const commands = [
     usage: `\`${commandCharacter}apod\``,
     description:
       "returns NASA's Astronomy Picture of the Day for today, along with its title and explanation."
+  },
+  {
+    usage: `\`${commandCharacter}dog\``,
+    description: "returns a random picture of a doggo."
+  },
+  {
+    usage: `\`${commandCharacter}jesus\``,
+    description: "returns a random picture of Jesus."
+  },
+  {
+    usage: `\`${commandCharacter}corporatebs\``,
+    description: "returns some corporate nonsense."
   }
 ];
 
@@ -63,6 +75,15 @@ client.on("message", message => {
       case "apod":
         getAstronomyPictureOfTheDay(message);
         break;
+      case "dog":
+        getRandomDoggo(message);
+        break;
+      case "jesus":
+        getJesus(message);
+        break;
+      case "corporatebs":
+        getCorporateBS(message);
+        break;
       default:
         message.reply(
           `Not sure what to do? Try \`${commandCharacter}help\` for a list of commands. Woof`
@@ -104,6 +125,41 @@ function getAstronomyPictureOfTheDay(message) {
       message.reply(
         `${json.url}\n**Title:** ${json.title}\n**Explanation:** ${json.explanation}`
       );
+    });
+}
+
+function getRandomDoggo(message) {
+  fetch(`https://dog.ceo/api/breeds/image/random`)
+    .then(response => {
+      return response.json();
+    })
+    .then(json => {
+      console.log(json);
+      if (json.status == "success") {
+        message.reply(json.message);
+      } else {
+        message.reply("I couldn't find any other doggos. Woof.");
+      }
+    });
+}
+
+function getJesus(message) {
+  fetch("https://jesusapi.000webhostapp.com/api")
+    .then(response => {
+      return response.json();
+    })
+    .then(json => {
+      message.reply(json.link);
+    });
+}
+
+function getCorporateBS(message) {
+  fetch("https://corporatebs-generator.sameerkumar.website/")
+    .then(response => {
+      return response.json();
+    })
+    .then(json => {
+      message.reply(`${json.phrase}. Woof.`);
     });
 }
 
