@@ -1,10 +1,10 @@
 #! /usr/bin/env node
 "use strict";
-
+require("dotenv").config();
 const Discord = require("discord.js");
 const fetch = require("node-fetch");
 
-const botToken = "NDIyMTMyODY3NTI3NjA2Mjgy.XZdSew.fasuLxz6yzXR9C6SAUqZs_igYzI";
+const botToken = process.env.BOT_TOKEN_DEV;
 const client = new Discord.Client();
 
 client.on("ready", () => {
@@ -16,10 +16,7 @@ const commandCharacter = "!";
 client.on("message", message => {
   const messageString = message.toString();
 
-  if (
-    message.content.startsWith(commandCharacter) &&
-    message.channel.name == "test-chamber"
-  ) {
+  if (message.content.startsWith(commandCharacter)) {
     const messageContent = messageString.slice(1).split(" ");
     const command = messageContent[0];
 
