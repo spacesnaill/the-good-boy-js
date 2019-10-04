@@ -16,10 +16,16 @@ const commands = [
     usage: `\`${commandCharacter}whereiss\``,
     description:
       "returns a link to the International Space Station's location via google maps and its longitude and latitude"
+  },
+  {
+    usage: `\`${commandCharacter}apod\``,
+    description:
+      "returns NASA's Astronomy Picture of the Day for today, along with its title and explanation."
   }
 ];
 
 const botToken = process.env.BOT_TOKEN_DEV;
+const nasaAPI = process.env.NASA_API_KEY;
 const client = new Discord.Client();
 
 client.on("ready", () => {
@@ -53,6 +59,15 @@ client.on("message", message => {
           **Command:** ${command.usage}\n**Description:** ${command.description}\n---
           `);
         });
+        break;
+      case "apod":
+        getAstronomyPictureOfTheDay(message);
+        break;
+      default:
+        message.reply(
+          `Not sure what to do? Try \`${commandCharacter}help\` for a list of commands. Woof`
+        );
+        break;
     }
   }
 });
@@ -62,7 +77,7 @@ function getUserAvatarURL(user) {
 }
 
 function getISSlocation(message) {
-  return fetch("http://api.open-notify.org/iss-now.json")
+  fetch("http://api.open-notify.org/iss-now.json")
     .then(response => {
       return response.json();
     })
@@ -77,6 +92,18 @@ function getISSlocation(message) {
           "Sorry, I can't find the International Space Station at the moment. Woof."
         );
       }
+    });
+}
+
+function getAstronomyPictureOfTheDay(message) {
+  fetch(`https://api.nasa.gov/planetary/apod?api_key=${nasaAPI}`)
+    .then(response => {
+      return response.json();
+    })
+    .then(json => {
+      message.reply(
+        `${json.url}\n**Title:** ${json.title}\n**Explanation:** ${json.explanation}`
+      );
     });
 }
 
