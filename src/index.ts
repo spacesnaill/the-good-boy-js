@@ -1,39 +1,43 @@
 #! /usr/bin/env node
 "use strict";
-require("dotenv").config();
-const Discord = require("discord.js");
-const fetch = require("node-fetch");
+import Discord from "discord.js";
 
+import * as dotenv from "dotenv";
+import fetch from "node-fetch";
+
+import ICommand from "./types/ICommand";
+
+dotenv.config();
 const commandCharacter = "?";
-const commands = [
+const commands: ICommand[] = [
   { usage: `\`${commandCharacter}ping\``, description: "responds with pong" },
   {
     usage: `\`${commandCharacter}avatar @user\``,
     description:
-      "return the image link of the specified user's avatar. Leave blank for your own avatar"
+      "return the image link of the specified user's avatar. Leave blank for your own avatar",
   },
   {
     usage: `\`${commandCharacter}whereiss\``,
     description:
-      "returns a link to the International Space Station's location via google maps and its longitude and latitude"
+      "returns a link to the International Space Station's location via google maps and its longitude and latitude",
   },
   {
     usage: `\`${commandCharacter}apod\``,
     description:
-      "returns NASA's Astronomy Picture of the Day for today, along with its title and explanation."
+      "returns NASA's Astronomy Picture of the Day for today, along with its title and explanation.",
   },
   {
     usage: `\`${commandCharacter}dog\``,
-    description: "returns a random picture of a doggo."
+    description: "returns a random picture of a doggo.",
   },
   {
     usage: `\`${commandCharacter}jesus\``,
-    description: "returns a random picture of Jesus."
+    description: "returns a random picture of Jesus.",
   },
   {
     usage: `\`${commandCharacter}corporatebs\``,
-    description: "returns some corporate nonsense."
-  }
+    description: "returns some corporate nonsense.",
+  },
 ];
 
 const botToken = process.env.BOT_TOKEN_DEV;
@@ -89,11 +93,11 @@ client.on("message", message => {
   }
 });
 
-function getUserAvatarURL(user) {
+function getUserAvatarURL(user: Discord.User) {
   return user ? user.avatarURL : "User not found";
 }
 
-function getISSlocation(message) {
+function getISSlocation(message: Discord.Message) {
   fetch("http://api.open-notify.org/iss-now.json")
     .then(response => {
       return response.json();
@@ -112,7 +116,7 @@ function getISSlocation(message) {
     });
 }
 
-function getAstronomyPictureOfTheDay(message) {
+function getAstronomyPictureOfTheDay(message: Discord.Message) {
   fetch(`https://api.nasa.gov/planetary/apod?api_key=${nasaAPI}`)
     .then(response => {
       return response.json();
@@ -124,14 +128,13 @@ function getAstronomyPictureOfTheDay(message) {
     });
 }
 
-function getRandomDoggo(message) {
+function getRandomDoggo(message: Discord.Message) {
   fetch(`https://dog.ceo/api/breeds/image/random`)
     .then(response => {
       return response.json();
     })
     .then(json => {
-      console.log(json);
-      if (json.status == "success") {
+      if (json.status === "success") {
         message.reply(json.message);
       } else {
         message.reply("I couldn't find any other doggos. Woof.");
@@ -139,7 +142,7 @@ function getRandomDoggo(message) {
     });
 }
 
-function getJesus(message) {
+function getJesus(message: Discord.Message) {
   fetch("https://jesusapi.000webhostapp.com/api")
     .then(response => {
       return response.json();
@@ -149,7 +152,7 @@ function getJesus(message) {
     });
 }
 
-function getCorporateBS(message) {
+function getCorporateBS(message: Discord.Message) {
   fetch("https://corporatebs-generator.sameerkumar.website/")
     .then(response => {
       return response.json();
@@ -159,8 +162,8 @@ function getCorporateBS(message) {
     });
 }
 
-function getHelp(message, commandList) {
-  let helpOutput = [`\n`];
+function getHelp(message: Discord.Message, commandList: ICommand[]) {
+  const helpOutput = [`\n`];
   commandList.forEach(command => {
     const commandToString = `${command.usage} \n ${command.description}`;
     if (helpOutput[helpOutput.length - 1].length > 2000) {
