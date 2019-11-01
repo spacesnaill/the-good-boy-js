@@ -66,11 +66,7 @@ client.on("message", message => {
         getISSlocation(message);
         break;
       case "help":
-        commands.forEach(command => {
-          message.channel.send(`
-          **Command:** ${command.usage}\n**Description:** ${command.description}\n---
-          `);
-        });
+        getHelp(message, commands);
         break;
       case "apod":
         getAstronomyPictureOfTheDay(message);
@@ -161,6 +157,23 @@ function getCorporateBS(message) {
     .then(json => {
       message.reply(`${json.phrase}. Woof.`);
     });
+}
+
+function getHelp(message, commandList) {
+  let helpOutput = [`\n`];
+  commandList.forEach(command => {
+    const commandToString = `${command.usage} \n ${command.description}`;
+    if (helpOutput[helpOutput.length - 1].length > 2000) {
+      helpOutput.push(`${commandToString} \n --- \n`);
+    } else {
+      helpOutput[helpOutput.length - 1] = helpOutput[
+        helpOutput.length - 1
+      ].concat(`${commandToString} \n --- \n`);
+    }
+  });
+  helpOutput.forEach(helpMessage => {
+    message.reply(helpMessage);
+  });
 }
 
 client.login(botToken);
