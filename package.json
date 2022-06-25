@@ -15,7 +15,7 @@
     "discord.js": "^11.5.1",
     "dotenv": "^8.1.0",
     "googleapis": "^44.0.0",
-    "node-fetch": "^2.6.0"
+    "node-fetch": "^2.6.7"
   },
   "devDependencies": {
     "@types/dotenv": "^8.2.0",
